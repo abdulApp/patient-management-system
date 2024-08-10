@@ -3,9 +3,9 @@
 import Image from "next/image";
 // import ReactDatePicker from "react-datepicker";
 import { Control } from "react-hook-form";
-// import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-number-input";
 
-// import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "./ui/checkbox";
 import {
   FormControl,
   FormField,
@@ -79,26 +79,26 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.PHONE_INPUT:
       return (
         <FormControl>
-          {/* <PhoneInput
-            defaultCountry="US"
+          <PhoneInput
+            defaultCountry="SA"
             placeholder={props.placeholder}
             international
             withCountryCallingCode
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
             className="input-phone"
-          /> */}
+          />
         </FormControl>
       );
     case FormFieldType.CHECKBOX:
       return (
         <FormControl>
           <div className="flex items-center gap-4">
-            {/* <Checkbox
+            <Checkbox
               id={props.name}
               checked={field.value}
               onCheckedChange={field.onChange}
-            /> */}
+            />
             <label htmlFor={props.name} className="checkbox-label">
               {props.label}
             </label>
