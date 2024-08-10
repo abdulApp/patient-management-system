@@ -12,7 +12,7 @@ import { UserFormValidation } from "@/lib/validation";
 
 import "react-phone-number-input/style.css";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
-// import SubmitButton from "../SubmitButton";
+import SubmitButton from "../SubmitButton";
 
 const PatientForm = () => {
   const router = useRouter();
@@ -85,7 +85,7 @@ const PatientForm = () => {
           placeholder="(555) 123-4567"
         />
 
-        {/* <SubmitButton isLoading={isLoading}>Get Started</SubmitButton> */}
+        <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
       </form>
     </Form>
   );
