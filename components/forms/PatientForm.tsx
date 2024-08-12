@@ -6,16 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "../ui/input";
+import { Form } from "@/components/ui/form";
 import { createUser } from "@/lib/actions/patient.actions";
 import { UserFormValidation } from "@/lib/validation";
 
@@ -32,17 +23,40 @@ const PatientForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof UserFormValidation>>({
     resolver: zodResolver(UserFormValidation),
     defaultValues: {
-      username: "",
-      //     name: "",
-      //     email: "",
-      //     phone: "",
+      name: "",
+      email: "",
+      phone: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {}
+  async function onSubmit({
+    name,
+    email,
+    phone,
+  }: z.infer<typeof UserFormValidation>) {
+    setIsLoading(true);
+
+    try {
+      const userData = {
+        name,
+        email,
+        phone,
+      };
+      const user = await createUser(userData);
+      if (user) router.push(`/patients/${user.$id}/register`);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 1000);
+    
+    setIsLoading(false);
+  }
   // const onSubmit = async (values: z.infer<typeof UserFormValidation>) => {
   //   setIsLoading(true);
 
@@ -76,8 +90,36 @@ const PatientForm = () => {
             <h1 className="header">Hi there 👋</h1>
             <p className="text-dark-700">Get started with appointments.</p>
           </section>
-          
-          <Button type="submit">Submit</Button>
+
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="name"
+            label="Full name"
+            placeholder="John Doe"
+            iconSrc="/assets/icons/user.svg"
+            iconAlt="user"
+          />
+
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name="email"
+            label="Email"
+            placeholder="Email"
+            iconSrc="/assets/icons/email.svg"
+            iconAlt="email"
+          />
+
+          <CustomFormField
+            fieldType={FormFieldType.PHONE_INPUT}
+            control={form.control}
+            name="phone"
+            label="Phone"
+            placeholder="(5*)-***-****"
+          />
+
+          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
         </form>
       </Form>
       {/* <Form {...form}>
