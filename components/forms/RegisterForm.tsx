@@ -1,55 +1,94 @@
 "use client";
 
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { registerPatient } from "@/lib/actions/patient.actions";
 
 import { Form, FormControl } from "@/components/ui/form";
-import { createUser } from "@/lib/actions/patient.actions";
-import { UserFormValidation } from "@/lib/validation";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { SelectItem } from "@/components/ui/select";
+import {
+  Doctors,
+  GenderOptions,
+  IdentificationTypes,
+  PatientFormDefaultValues,
+} from "@/constants";
+import { registerPatient } from "@/lib/actions/patient.actions";
+import { PatientFormValidation } from "@/lib/validation";
 
+import "react-datepicker/dist/react-datepicker.css";
 import "react-phone-number-input/style.css";
 import CustomFormField, { FormFieldType } from "../CustomFormField";
-import SubmitButton from "../SubmitButton";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { Doctors, GenderOptions, IdentificationTypes } from "@/constants";
-import { Label } from "../ui/label";
-import "react-datepicker/dist/react-datepicker.css";
-import { SelectItem } from "../ui/select";
 import { FileUploader } from "../FileUploader";
+import SubmitButton from "../SubmitButton";
 
 const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof UserFormValidation>>({
-    resolver: zodResolver(UserFormValidation),
+  const form = useForm<z.infer<typeof PatientFormValidation>>({
+    resolver: zodResolver(PatientFormValidation),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
+      ...PatientFormDefaultValues,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
     },
   });
 
-  async function onSubmit({
-    name,
-    email,
-    phone,
-  }: z.infer<typeof UserFormValidation>) {
+  async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setIsLoading(true);
 
+    let formData;
+    if (
+      values.identificationDocument &&
+      values.identificationDocument?.length > 0
+    ) {
+      const blobFile = new Blob([values.identificationDocument[0]], {
+        type: values.identificationDocument[0].type,
+      });
+
+      formData = new FormData();
+      formData.append("blobFile", blobFile);
+      formData.append("fileName", values.identificationDocument[0].name);
+    }
+
     try {
-      const userData = {
-        name,
-        email,
-        phone,
+      const patientData = {
+        ...values,
+        userId: user.$id,
+        birthDate: new Date(values.birthDate),
+        identificationDocument: formData,
+        // name: values.name,
+        // email: values.email,
+        // phone: values.phone,
+        // gender: values.gender,
+        // address: values.address,
+        // occupation: values.occupation,
+        // emergencyContactName: values.emergencyContactName,
+        // emergencyContactNumber: values.emergencyContactNumber,
+        // primaryPhysician: values.primaryPhysician,
+        // insuranceProvider: values.insuranceProvider,
+        // insurancePolicyNumber: values.insurancePolicyNumber,
+        // allergies: values.allergies,
+        // currentMedication: values.currentMedication,
+        // familyMedicalHistory: values.familyMedicalHistory,
+        // pastMedicalHistory: values.pastMedicalHistory,
+        // identificationType: values.identificationType,
+        // identificationNumber: values.identificationNumber,
+        // privacyConsent: values.privacyConsent,
       };
-      const user = await createUser(userData);
-      if (user) router.push(`/patients/${user.$id}/register`);
+      // @ts-ignore
+      const newPatient = await registerPatient(patientData);
+
+      if (newPatient) {
+        router.push(`/patients/${user.$id}/new-appointment`);
+      }
+
     } catch (error) {
       console.log(error);
     }
