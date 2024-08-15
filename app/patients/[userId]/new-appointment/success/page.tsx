@@ -3,15 +3,16 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Doctors } from "@/constants";
-// import { getAppointment } from "@/lib/actions/appointment.actions";
+import { getAppointment } from "@/lib/actions/appointment.actions";
 import { formatDateTime } from "@/lib/utils";
 
 const RequestSuccess = async ({
-  searchParams,
   params: { userId },
+  searchParams,
 }: SearchParamProps) => {
+
   const appointmentId = (searchParams?.appointmentId as string) || "";
-  const appointment = "await getAppointment(appointmentId);"
+  const appointment = await getAppointment(appointmentId);
 
   const doctor = Doctors.find(
     (doctor) => doctor.name === appointment.primaryPhysician
