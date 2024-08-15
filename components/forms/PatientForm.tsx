@@ -46,10 +46,6 @@ const PatientForm = () => {
       console.log(error);
     }
 
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 1000);
-
     setIsLoading(false);
   }
 
