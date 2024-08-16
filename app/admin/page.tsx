@@ -9,6 +9,20 @@ import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
 
 const AdminPage = async () => {
   const appointments = await getRecentAppointmentList();
+  // console.log("====================================");
+  // console.log(appointments);
+  // console.log("====================================");
+  function phoneNum() {
+    if (appointments && appointments.documents) {
+      appointments.documents.forEach((doc: { patient: any }) => {
+        if (doc.patient.phone) {
+          return doc.patient.phone;
+        }
+      });
+    }
+  }
+
+  const userPhoneNumber = phoneNum()
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">

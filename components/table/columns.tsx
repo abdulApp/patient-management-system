@@ -26,6 +26,14 @@ export const columns: ColumnDef<Appointment>[] = [
     },
   },
   {
+    accessorKey: "phone",
+    header: "Phone",
+    cell: ({ row }) => {
+      const appointment = row.original;
+      return <p className="text-14-medium ">{appointment.patient.phone}</p>;
+    },
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
@@ -89,14 +97,16 @@ export const columns: ColumnDef<Appointment>[] = [
             title="Schedule Appointment"
             description="Please confirm the following details to schedule."
           />
-          <AppointmentModal
-            patientId={appointment.patient.$id}
-            userId={appointment.userId}
-            appointment={appointment}
-            type="cancel"
-            title="Cancel Appointment"
-            description="Are you sure you want to cancel your appointment?"
-          />
+          <p className="text-red-800">
+            <AppointmentModal
+              patientId={appointment.patient.$id}
+              userId={appointment.userId}
+              appointment={appointment}
+              type="cancel"
+              title="Cancel Appointment"
+              description="Are you sure you want to cancel your appointment?"
+            />
+          </p>
         </div>
       );
     },

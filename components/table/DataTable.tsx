@@ -44,6 +44,10 @@ export function DataTable<TData, TValue>({
     }
   }, [encryptedKey]);
 
+  // console.log('====================================');
+  // console.log(data);
+  // console.log('====================================');
+
   const table = useReactTable({
     data,
     columns,
