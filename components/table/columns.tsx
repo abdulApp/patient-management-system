@@ -88,26 +88,30 @@ export const columns: ColumnDef<Appointment>[] = [
       const appointment = row.original;
 
       return (
-        <div className="flex gap-1">
-          <AppointmentModal
-            patientId={appointment.patient.$id}
-            userId={appointment.userId}
-            appointment={appointment}
-            type="schedule"
-            title="Schedule Appointment"
-            description="Please confirm the following details to schedule."
-          />
-          <p className="text-red-800">
-            <AppointmentModal
-              patientId={appointment.patient.$id}
-              userId={appointment.userId}
-              appointment={appointment}
-              type="cancel"
-              title="Cancel Appointment"
-              description="Are you sure you want to cancel your appointment?"
-            />
-          </p>
-        </div>
+        <>
+          {appointment.status !== "cancelled" && (
+            <div className="flex gap-1">
+              <AppointmentModal
+                patientId={appointment.patient.$id}
+                userId={appointment.userId}
+                appointment={appointment}
+                type="schedule"
+                title="Schedule Appointment"
+                description="Please confirm the following details to schedule."
+              />
+              <p className="text-red-800">
+                <AppointmentModal
+                  patientId={appointment.patient.$id}
+                  userId={appointment.userId}
+                  appointment={appointment}
+                  type="cancel"
+                  title="Cancel Appointment"
+                  description="Are you sure you want to cancel your appointment?"
+                />
+              </p>
+            </div>
+          )}
+        </>
       );
     },
   },
