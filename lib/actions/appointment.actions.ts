@@ -13,7 +13,6 @@ import {
 } from "../appwrite.config";
 import { formatDateTime, parseStringify } from "../utils";
 
-
 //  CREATE APPOINTMENT
 export const createAppointment = async (
   appointment: CreateAppointmentParams
@@ -31,7 +30,7 @@ export const createAppointment = async (
   } catch (error) {
     console.error("An error occurred while creating a new appointment:", error);
   }
-}
+};
 
 // GET APPOINTMENT
 export const getAppointment = async (appointmentId: string) => {
@@ -138,7 +137,15 @@ export const updateAppointment = async ({
     if (!updatedAppointment) throw Error;
 
     // TODO: SMS notification
-    const smsMessage = `Greetings from CarePulse. ${type === "schedule" ? `Your appointment is confirmed for ${formatDateTime(appointment.schedule!).dateTime} with Dr. ${appointment.primaryPhysician}` : `We regret to inform that your appointment for ${formatDateTime(appointment.schedule!).dateTime} is cancelled. Reason:  ${appointment.cancellationReason}`}.`;
+    const smsMessage = `Greetings from CarePulse. ${
+      type === "schedule"
+        ? `Your appointment is confirmed for ${
+            formatDateTime(appointment.schedule!).dateTime
+          } with Dr. ${appointment.primaryPhysician}`
+        : `We regret to inform that your appointment for ${
+            formatDateTime(appointment.schedule!).dateTime
+          } is cancelled. Reason:  ${appointment.cancellationReason}`
+    }.`;
     await sendSMSNotification(userId, smsMessage);
 
     revalidatePath("/admin");
